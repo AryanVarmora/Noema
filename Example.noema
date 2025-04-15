@@ -1,0 +1,36 @@
+// Define facts about character states
+fact mood("Jade", "anxious")
+fact trust("Jade", "low")
+fact failed_attempts(0)
+
+// Define rules for changing states
+rule reassure if player says "You did great" {
+  mood("Jade") = "proud"
+  trust("Jade") = "medium"
+}
+
+rule frustrated if failed_attempts > 3 {
+  mood("Jade") = "frustrated"
+}
+
+// Define a scene with NPCs and dialogue
+scene "rooftop" {
+  npc "Jade" feels mood("Jade")
+
+  when player says "Can we trust them?" and mood("Jade") == "anxious" {
+    Jade responds "I'm not sure... but we don't have a choice."
+  }
+
+  when player says "I believe in you" {
+    mood("Jade") = "hopeful"
+    Jade responds "Thanks... that means a lot."
+  }
+  
+  when player says "What happened earlier?" and trust("Jade") == "low" {
+    Jade responds "I don't want to talk about it."
+  }
+  
+  when player says "What happened earlier?" and trust("Jade") == "medium" {
+    Jade responds "It was my fault. I missed the signal and nearly got us caught."
+  }
+}
