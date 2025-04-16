@@ -1,4 +1,4 @@
-package NOEMA;
+package noema;
 
 /**
  * Represents a token in the Noema language
@@ -6,7 +6,8 @@ package NOEMA;
 public class Token {
     public enum Type {
         // Keywords
-        FACT, RULE, SCENE, NPC, WHEN, RESPONDS, FEELS, IF, AND, WITHIN, MINUTE,
+        FACT, RULE, SCENE, NPC, WHEN, RESPONDS, FEELS, IF, AND, OR, WITHIN, MINUTE,
+        PLAYER, SAYS, BEFORE, AFTER, HOUR, DAY,
         
         // Identifiers and literals
         IDENTIFIER, STRING, NUMBER,

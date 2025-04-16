@@ -1,9 +1,12 @@
-package NOEMA;
+package noema;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+// Remove this import - it's causing issues
+// import Noema.Token;
 
 /**
  * Lexical analyzer for the Noema language
@@ -16,6 +19,7 @@ public class Lexer {
     private int current = 0;
     private int line = 1;
     
+    // Initialize the keywords map properly
     private static final Map<String, Token.Type> keywords;
     
     static {
@@ -29,8 +33,17 @@ public class Lexer {
         keywords.put("feels", Token.Type.FEELS);
         keywords.put("if", Token.Type.IF);
         keywords.put("and", Token.Type.AND);
+        keywords.put("or", Token.Type.OR);
         keywords.put("within", Token.Type.WITHIN);
+        keywords.put("before", Token.Type.BEFORE);
+        keywords.put("after", Token.Type.AFTER);
         keywords.put("minute", Token.Type.MINUTE);
+        keywords.put("hour", Token.Type.HOUR);
+        keywords.put("hours", Token.Type.HOUR);
+        keywords.put("day", Token.Type.DAY);
+        keywords.put("days", Token.Type.DAY);
+        keywords.put("player", Token.Type.PLAYER);
+        keywords.put("says", Token.Type.SAYS);
     }
     
     public Lexer(String source) {

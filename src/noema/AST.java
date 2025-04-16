@@ -1,4 +1,4 @@
-package NOEMA;
+package noema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +25,12 @@ public class AST {
         R visitExpressionNode(Expression node);
         R visitConditionNode(Condition node);
         R visitActionNode(Action node);
+        R visitTemporalConditionNode(TemporalCondition node);
     }
     
     // Root node for a complete program
     public static class Program implements Node {
-        final List<Node> statements = new ArrayList<>();
+        public final List<Node> statements = new ArrayList<>();
         
         public void addStatement(Node statement) {
             statements.add(statement);
@@ -41,10 +42,24 @@ public class AST {
         }
     }
     
+    // Expression (used in fact arguments, conditions, etc.)
+    public static class Expression implements Node {
+        public final Object value;  // Could be a literal value or a variable reference
+        
+        public Expression(Object value) {
+            this.value = value;
+        }
+        
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitExpressionNode(this);
+        }
+    }
+    
     // Fact declaration
     public static class Fact implements Node {
-        final String predicate;
-        final List<Expression> arguments;
+        public final String predicate;
+        public final List<Expression> arguments;
         
         public Fact(String predicate, List<Expression> arguments) {
             this.predicate = predicate;
@@ -57,11 +72,27 @@ public class AST {
         }
     }
     
+    // Condition for rules and when clauses
+    public static class Condition implements Node {
+        public final List<Expression> conditions;
+        public final List<String> operators;  // "and", "==", etc.
+        
+        public Condition(List<Expression> conditions, List<String> operators) {
+            this.conditions = conditions;
+            this.operators = operators;
+        }
+        
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitConditionNode(this);
+        }
+    }
+    
     // Rule definition
     public static class Rule implements Node {
-        final String name;
-        final Condition condition;
-        final List<Action> actions;
+        public final String name;
+        public final Condition condition;
+        public final List<Action> actions;
         
         public Rule(String name, Condition condition, List<Action> actions) {
             this.name = name;
@@ -75,11 +106,27 @@ public class AST {
         }
     }
     
+    // Action for rule execution
+    public static class Action implements Node {
+        public final String type;  // "assignment", "response", etc.
+        public final Object value;  // Depends on the type
+        
+        public Action(String type, Object value) {
+            this.type = type;
+            this.value = value;
+        }
+        
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return visitor.visitActionNode(this);
+        }
+    }
+    
     // Scene definition
     public static class Scene implements Node {
-        final String name;
-        final List<NPC> npcs;
-        final List<When> triggers;
+        public final String name;
+        public final List<NPC> npcs;
+        public final List<When> triggers;
         
         public Scene(String name, List<NPC> npcs, List<When> triggers) {
             this.name = name;
@@ -95,8 +142,8 @@ public class AST {
     
     // NPC declaration in a scene
     public static class NPC implements Node {
-        final String name;
-        final Expression mood;
+        public final String name;
+        public final Expression mood;
         
         public NPC(String name, Expression mood) {
             this.name = name;
@@ -111,8 +158,8 @@ public class AST {
     
     // When clause for dialogue triggers
     public static class When implements Node {
-        final Condition condition;
-        final List<Action> actions;
+        public final Condition condition;
+        public final List<Action> actions;
         
         public When(Condition condition, List<Action> actions) {
             this.condition = condition;
@@ -127,8 +174,8 @@ public class AST {
     
     // Response action
     public static class Response implements Node {
-        final String character;
-        final String text;
+        public final String character;
+        public final String text;
         
         public Response(String character, String text) {
             this.character = character;
@@ -141,49 +188,38 @@ public class AST {
         }
     }
     
-    // Expression (used in fact arguments, conditions, etc.)
-    public static class Expression implements Node {
-        final Object value;  // Could be a literal value or a variable reference
+    // Function call expression for more complex conditions
+    public static class FunctionCall {
+        public final String name;
+        public final List<Expression> arguments;
         
-        public Expression(Object value) {
-            this.value = value;
-        }
-        
-        @Override
-        public <R> R accept(Visitor<R> visitor) {
-            return visitor.visitExpressionNode(this);
+        public FunctionCall(String name, List<Expression> arguments) {
+            this.name = name;
+            this.arguments = arguments;
         }
     }
     
-    // Condition for rules and when clauses
-    public static class Condition implements Node {
-        final List<Expression> conditions;
-        final List<String> operators;  // "and", "==", etc.
+    // Temporal condition for time-based rules
+    public static class TemporalCondition implements Node {
+        public final Expression event1;
+        public final Expression event2;
+        public final String temporalOperator; // "within", "before", "after"
+        public final Expression duration;
         
-        public Condition(List<Expression> conditions, List<String> operators) {
-            this.conditions = conditions;
-            this.operators = operators;
+        public TemporalCondition(
+                Expression event1, 
+                String temporalOperator,
+                Expression event2,
+                Expression duration) {
+            this.event1 = event1;
+            this.temporalOperator = temporalOperator;
+            this.event2 = event2;
+            this.duration = duration;
         }
         
         @Override
         public <R> R accept(Visitor<R> visitor) {
-            return visitor.visitConditionNode(this);
-        }
-    }
-    
-    // Action for rule execution
-    public static class Action implements Node {
-        final String type;  // "assignment", "response", etc.
-        final Object value;  // Depends on the type
-        
-        public Action(String type, Object value) {
-            this.type = type;
-            this.value = value;
-        }
-        
-        @Override
-        public <R> R accept(Visitor<R> visitor) {
-            return visitor.visitActionNode(this);
+            return visitor.visitTemporalConditionNode(this);
         }
     }
 }

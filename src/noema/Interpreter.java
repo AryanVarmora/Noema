@@ -1,4 +1,4 @@
-package NOEMA;
+package noema;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Interpreter for the Noema language
  */
-public class Interpreter implements AST.Visitor<Object> {
+public class Interpreter  {
     
     // Knowledge base for storing facts and rules
     private final Map<String, List<Object[]>> facts = new HashMap<>();
