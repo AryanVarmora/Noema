@@ -1,0 +1,8 @@
+// Simple scene test
+scene "greeting" {
+  npc "Guide" feels mood("neutral")
+  
+  when player says "hello" {
+    Guide responds "Hello there! How can I help you?"
+  }
+}

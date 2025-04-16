@@ -1,0 +1,8 @@
+// Rules test
+fact score(60)
+rule pass if score > 50 {
+  result = "pass"
+}
+rule fail if score <= 50 {
+  result = "fail"
+}

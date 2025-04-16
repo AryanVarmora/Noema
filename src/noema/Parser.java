@@ -5,7 +5,25 @@ import java.util.List;
 
 /**
  * Parser for the Noema language
- */
+*/
+    @Test
+public void testFactParsing() {
+        String source = "fact person(\"Alice\")";
+        Lexer lexer = new Lexer(source);
+         List<Token> tokens = lexer.scanTokens();
+     
+        Parser parser = new Parser(tokens);
+        AST.Program program = parser.parse();
+     
+        assertEquals(1, program.statements.size());
+        assertTrue(program.statements.get(0) instanceof AST.Fact);
+        AST.Fact fact = (AST.Fact)program.statements.get(0);
+        assertEquals("person", fact.predicate);
+     // More assertions
+    } 
+
+
+
 public class Parser {
     private final List<Token> tokens;
     private int current = 0;
@@ -238,4 +256,20 @@ public class Parser {
             advance();
         }
     }
+
+    @Test
+    public void testFactParsing() {
+            String source = "fact person(\"Alice\")";
+            Lexer lexer = new Lexer(source);
+             List<Token> tokens = lexer.scanTokens();
+         
+            Parser parser = new Parser(tokens);
+            AST.Program program = parser.parse();
+         
+            assertEquals(1, program.statements.size());
+            assertTrue(program.statements.get(0) instanceof AST.Fact);
+            AST.Fact fact = (AST.Fact)program.statements.get(0);
+            assertEquals("person", fact.predicate);
+         // More assertions
+    } 
 }

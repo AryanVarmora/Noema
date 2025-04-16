@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import noema.AST;
+
 /**
  * Interpreter for the Noema language
  */
@@ -242,6 +244,26 @@ public class Interpreter  {
     @Override
     public Object visitActionNode(AST.Action node) {
         return executeAction(node);
+    }
+
+    @Test
+    public void testRuleExecution() {
+    String source = "fact score(60)\n" +
+                   "rule pass if score > 50 {\n" +
+                   "  result = \"pass\"\n" +
+                   "}";
+    
+        // Set up lexer, parser, interpreter
+        Lexer lexer = new Lexer(source);
+        Parser parser = new Parser(lexer.scanTokens());
+        Interpreter interpreter = new Interpreter();
+    
+        // Run the program
+        interpreter.interpret(parser.parse());
+    
+        // Verify the result
+        Object result = interpreter.getVariable("result");
+        assertEquals("pass", result);
     }
     
     // Knowledge base operations
