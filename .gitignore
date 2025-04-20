@@ -1,0 +1,13 @@
+# Ignore compiled class files
+bin/
+*.class
+.DS_Store
+.idea/workspace.xml
+lib/hamcrest-core-1.3.jar
+lib/6 - Akerlof 1970 - Lemons.jar
+bin/noema
+.bin/noema
+bin/noema/Lexer.class
+bin/noema/Main.class
+bin/noema/Token.class
+bin/noema/Token$Type.class
